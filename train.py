@@ -19,10 +19,18 @@ import mlflow.sklearn
 
 
 # Get url from DVC
+import dvc.api
 
 path = "data/wine-quality.csv"
 repo = "/home/outini/mlops/dvc-mlflow-test"
 version = "v1"
+
+data_url = dvc.api.get_url(
+    path=path,
+    repo=repo,
+    rev=version,
+)
+
 
 mlflow.set_experiment("demo")
 
@@ -39,10 +47,19 @@ if __name__ == "__main__":
     np.random.seed(40)
 
     # Read the wine-quality csv file (make sure you're running this from the root of MLflow!)
-    wine_path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "wine-quality.csv"
-    )
-    data = pd.read_csv(wine_path)
+    # wine_path = os.path.join(
+    #     os.path.dirname(os.path.abspath(__file__)), "wine-quality.csv"
+    # )
+    # data = pd.read_csv(wine_path)
+
+    # Read the wine-quality csv file from the remote repository
+    data = pd.read_csv(data_url, sep=",")
+
+    # Log data params
+    mlflow.log_param("data_url", data_url)
+    mlflow.log_param("data_version", version)
+    mlflow.log_param("input_rows", data.shape[0])
+    mlflow.log_param("input_cols", data.shape[1])
 
     # Split the data into training and test sets. (0.75, 0.25) split.
     train, test = train_test_split(data)
