@@ -24,7 +24,7 @@ import dvc.api
 
 path = "data/wine-quality.csv"
 repo = "/home/outini/mlops/dvc-mlflow-test"
-version = "v2"
+version = "v3"
 
 data_url = dvc.api.get_url(
     path=path,
